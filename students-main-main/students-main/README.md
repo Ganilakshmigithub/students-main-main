@@ -7,3 +7,8 @@ Junit Mockito testcases for service layer
 
 
 ![Read service testcase](https://github.com/user-attachments/assets/c48b27fe-01eb-4e98-81c1-01d5e2093db5)
+
+
+junit mockito testcases for control layer
+![Read Controller testcase](https://github.com/user-attachments/assets/0711c779-b933-4a82-a3a3-2b16145fe437)
+![CUD Controller testcases](https://github.com/user-attachments/assets/e3e7e197-5a1d-43c2-a0a5-276a0c7c4deb)

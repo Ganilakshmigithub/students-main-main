@@ -1,4 +1,5 @@
 package com.spring.services;
+import com.spring.dtos.CustomPageResponse;
 import com.spring.dtos.StudentDTO;
 import com.spring.dtos.SubjectDTO;
 import org.junit.jupiter.api.BeforeEach;
@@ -6,6 +7,9 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 import java.util.Arrays;
 import java.util.List;
@@ -70,34 +74,47 @@ public class StudentClientServiceTest {
     }
 
     @Test
-    void testgetAllStudents() {
+    void testGetAllStudents() {
+        int page = 0;
+        int size = 2;
+        // Mock subjects
         SubjectDTO subject1 = new SubjectDTO(1, "Mathematics", 90);
         SubjectDTO subject2 = new SubjectDTO(2, "Physics", 85);
-        // Create StudentDTO objects with subjects using the helper method
         StudentDTO student1 = createStudent(1, "John", 25, "Male", "1999-05-15", "Computer Science", 2020, 2024, subject1, subject2);
-        StudentDTO student2 = createStudent(2, "vijay", 26, "Male", "1998-08-22", "Mechanical Engineering", 2019, 2023, subject1);
-        // Mock the RestTemplate behavior
-        when(restTemplate.getForObject("http://localhost:8083/students/all?page=0&size=2" , List.class)).thenReturn(Arrays.asList(student1, student2));
-        List<StudentDTO> result = studentClientService.getAllStudents();
-        assertEquals(2, result.size());
-
+        StudentDTO student2 = createStudent(2, "Vijay", 26, "Male", "1998-08-22", "Mechanical Engineering", 2019, 2023, subject1);
+        CustomPageResponse<StudentDTO> mockResponse = new CustomPageResponse<>
+                (Arrays.asList(student1, student2),  1, 2, 2);
+        when(restTemplate.exchange(
+                eq("http://localhost:8083/students/all?page=0&size=2"),
+                eq(HttpMethod.GET),
+                any(),
+                eq(new ParameterizedTypeReference<CustomPageResponse<StudentDTO>>() {})
+        )).thenReturn(ResponseEntity.ok(mockResponse));
+        // Call the method and assert the results
+        CustomPageResponse<StudentDTO> result = studentClientService.getAllStudents(page, size);
+        assertEquals(2, result.getContent().size());
         // Verify student 1 details
-        assertStudentDetails(result.get(0), 1, "John", 25, "Male", "1999-05-15", "Computer Science", 2020, 2024, subject1, subject2);
-
+        assertStudentDetails(result.getContent().get(0), 1, "John", 25, "Male", "1999-05-15", "Computer Science", 2020, 2024, subject1, subject2);
         // Verify student 2 details
-        assertStudentDetails(result.get(1), 2, "vijay", 26, "Male", "1998-08-22", "Mechanical Engineering", 2019, 2023, subject1);
-
-        // Verify that the restTemplate's getForObject method was called once with the correct URL
-        verify(restTemplate, times(1)).getForObject("http://localhost:8083/students/all?page=0&size=2", List.class);
+        assertStudentDetails(result.getContent().get(1), 2, "Vijay", 26, "Male", "1998-08-22", "Mechanical Engineering", 2019, 2023, subject1);
+        // Verify the pagination metadata
+        assertEquals(1, result.getTotalPages());
+        assertEquals(2, result.getTotalElements());
+        // Verify that RestTemplate's exchange method was called once
+        verify(restTemplate, times(1)).exchange(
+                eq("http://localhost:8083/students/all?page=0&size=2"),
+                eq(HttpMethod.GET),
+                any(),
+                eq(new ParameterizedTypeReference<CustomPageResponse<StudentDTO>>() {})
+        );
     }
-
     @Test
     void testfindSubjectByname(){
 
         String subject = "Mathematics";
         SubjectDTO subject1 = new SubjectDTO(1, "Mathematics", 90);
         when(restTemplate.getForObject("http://localhost:8083/students/subjects/"+subject,List.class)).thenReturn(Arrays.asList(subject1));
-        List<SubjectDTO> result = studentClientService.findsubjectByName(subject);
+        List<SubjectDTO> result = studentClientService.findSubjectsByName(subject);
 
         assertEquals(1, result.size());
         assertEquals(1,result.get(0).getSubId());

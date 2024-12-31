@@ -12,3 +12,9 @@ Junit Mockito testcases for service layer
 junit mockito testcases for control layer
 ![Read Controller testcase](https://github.com/user-attachments/assets/0711c779-b933-4a82-a3a3-2b16145fe437)
 ![CUD Controller testcases](https://github.com/user-attachments/assets/e3e7e197-5a1d-43c2-a0a5-276a0c7c4deb)
+
+
+testcases with 100% coverage
+
+![Service testcases coverage](https://github.com/user-attachments/assets/ff714b77-0193-40ff-8641-f55870c2a265)
+![controller testcases coverage](https://github.com/user-attachments/assets/55c888ed-7358-4fd7-8dae-e4e5b55720d3)

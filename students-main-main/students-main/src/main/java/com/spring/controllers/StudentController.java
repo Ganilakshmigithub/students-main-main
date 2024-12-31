@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 public class StudentController {
     @Autowired
     private StudentService studentService;
+
     // Add a new student
     @PostMapping("/save")
     public Students addStudent(@RequestBody Students student) {
@@ -17,16 +18,15 @@ public class StudentController {
 
     //update student marks
     @PutMapping("/update/{student_id}/{subject_id}/newmarks")
-    public String UpdateMarks(@PathVariable int student_id,@PathVariable int subject_id,@RequestParam int newmarks){
+    public String UpdateMarks(@PathVariable int student_id, @PathVariable int subject_id, @RequestParam int newmarks) {
         studentService.updateMarks(student_id, subject_id, newmarks);
         return "marks updated successfully..!!";
     }
 
     //deletes student by id
     @DeleteMapping("/del/{id}")
-    public void deleteStudentById(@PathVariable int id){
+    public void deleteStudentById(@PathVariable int id) {
         studentService.deleteStudentById(id);
     }
 
 }
-

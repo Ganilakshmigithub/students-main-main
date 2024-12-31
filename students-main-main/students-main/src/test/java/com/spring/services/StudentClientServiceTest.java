@@ -40,7 +40,7 @@ public class StudentClientServiceTest {
         // Mock the RestTemplate behavior
         when(restTemplate.getForObject("http://localhost:8083/students/name/" + name, List.class)).thenReturn(Arrays.asList(student1, student2));
         // Act: Call the method under test
-        List<StudentDTO> result = studentClientService.getStudentByName(name);
+        List<StudentDTO> result = studentClientService.getStudentsByName(name);
         // Assert: Verify the result
         assertEquals(2, result.size());
         // Verify student 1 details
@@ -52,13 +52,12 @@ public class StudentClientServiceTest {
     }
     @Test
     void testGetStudentByAge() {
-        // Arrange: create mock response with students
         int age = 25;
         SubjectDTO subject1 = new SubjectDTO(1, "Mathematics", 90);
         SubjectDTO subject2 = new SubjectDTO(2, "Physics", 85);
         // Create StudentDTO objects with subjects using the helper method
         StudentDTO student1 = createStudent(1, "John", 25, "Male", "1999-05-15", "Computer Science", 2020, 2024, subject1, subject2);
-        StudentDTO student2 = createStudent(2, "Doe", 25, "Male", "1998-08-22", "Mechanical Engineering", 2019, 2023, subject1);
+        StudentDTO student2 = createStudent(2, "Doe", 25, "Male", "1999-08-22", "Mechanical Engineering", 2019, 2023, subject1);
         // Mock the RestTemplate behavior
         when(restTemplate.getForObject("http://localhost:8083/students/age/" + age, List.class)).thenReturn(Arrays.asList(student1, student2));
         List<StudentDTO> result = studentClientService.getStudentByAge(age);
@@ -68,7 +67,7 @@ public class StudentClientServiceTest {
         assertStudentDetails(result.get(0), 1, "John", 25, "Male", "1999-05-15", "Computer Science", 2020, 2024, subject1, subject2);
 
         // Verify student 2 details
-        assertStudentDetails(result.get(1), 2, "Doe", 25, "Male", "1998-08-22", "Mechanical Engineering", 2019, 2023, subject1);
+        assertStudentDetails(result.get(1), 2, "Doe", 25, "Male", "1999-08-22", "Mechanical Engineering", 2019, 2023, subject1);
         // Verify that the restTemplate's getForObject method was called once with the correct URL
         verify(restTemplate, times(1)).getForObject("http://localhost:8083/students/age/" + age, List.class);
     }

@@ -3,11 +3,15 @@ package com.spring.services;
 import com.spring.dtos.CustomPageResponse;
 import com.spring.dtos.StudentDTO;
 import com.spring.dtos.SubjectDTO;
+import com.spring.exceptions.StudentNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.ArrayList;
 import java.util.List;
 @Service
 public class StudentClientService {
@@ -15,9 +19,9 @@ public class StudentClientService {
     @Autowired
     private RestTemplate restTemplate;
     // Fetch students by name
-    public List<StudentDTO> getStudentByName(String name) {
+    public List<StudentDTO> getStudentsByName(String name) {
         String url = STUDENT_SERVICE_URL + "/name/" + name;
-        List<StudentDTO> students = restTemplate.getForObject(url, List.class);   //get for object is getmapping
+        List<StudentDTO> students=restTemplate.getForObject(url, List.class);
         return students;
     }
     // Fetch students by age

@@ -1,4 +1,6 @@
 package com.spring.services;
+import com.spring.dtos.StudentDTO;
+import com.spring.dtos.SubjectDTO;
 import com.spring.entities.Students;
 import com.spring.entities.Subject;
 import com.spring.exceptions.StudentNotFoundException;
@@ -19,9 +21,33 @@ public class StudentServiceTest {
     @InjectMocks
     private StudentService studentService;
     // Happy Path: Test adding a student
+
+    @Test
+    public void testConvertoDTO(){
+        Subject s1=new Subject(1,"Maths",80);
+        Subject s2=new Subject(2,"English",90);
+        Students student=new Students(1,"raju",23,"male","23-7-2001","CSE",2019,2023,Arrays.asList(s1,s2));
+        StudentDTO studentDTO=studentService.convertToDTO(student);
+        assertNotNull(studentDTO);
+        assertEquals(student.getId(),studentDTO.getId());
+        assertEquals(student.getName(),studentDTO.getName());
+        assertEquals(student.getAge(),studentDTO.getAge());
+        assertEquals(student.getGender(),studentDTO.getGender());
+        assertEquals(student.getDob(),studentDTO.getDob());
+        assertEquals(student.getCourse(),studentDTO.getCourse());
+        assertEquals(student.getCourseStartYear(),studentDTO.getCourseStartYear());
+        assertEquals(student.getCourseEndYear(),studentDTO.getCourseEndYear());
+        assertEquals(student.getSubjects().get(0).getSubId(),studentDTO.getSubjects().get(0).getSubId());
+        assertEquals(student.getSubjects().get(1).getSubId(),studentDTO.getSubjects().get(1).getSubId());
+        assertEquals(student.getSubjects().get(0).getName(),studentDTO.getSubjects().get(0).getName());
+        assertEquals(student.getSubjects().get(1).getName(),studentDTO.getSubjects().get(1).getName());
+        assertEquals(student.getSubjects().get(0).getMarks(),studentDTO.getSubjects().get(0).getMarks());
+        assertEquals(student.getSubjects().get(1).getMarks(),studentDTO.getSubjects().get(1).getMarks());
+
+    }
     @Test
     public void testAddStudentSuccess() {
-        Students student = new Students();
+        StudentDTO student = new StudentDTO();
         student.setId(1);
         student.setName("John Doe");
         student.setAge(20);
@@ -30,12 +56,12 @@ public class StudentServiceTest {
         student.setCourse("Computer Science");
         student.setCourseStartYear(2022);
         student.setCourseEndYear(2026);
-        Subject subject1 = new Subject(1, "Mathematics", 95);
-        Subject subject2 = new Subject(2, "Physics", 88);
+        SubjectDTO subject1 = new SubjectDTO(1, "Mathematics", 95);
+        SubjectDTO subject2 = new SubjectDTO(2, "Physics", 88);
         student.setSubjects(Arrays.asList(subject1, subject2));
-        when(studentRepo.save(any(Students.class))).thenReturn(student);
-        Students savedStudent = studentService.addStudent(student);
-        verify(studentRepo, times(1)).save(student);
+        when(studentRepo.save(any())).thenReturn(student);
+        StudentDTO savedStudent = studentService.addStudent(student);
+        verify(studentRepo, times(1)).save(any());
         assertNotNull(savedStudent);
         assertEquals("John Doe", savedStudent.getName());
         assertEquals(20, savedStudent.getAge());
@@ -109,7 +135,7 @@ public class StudentServiceTest {
     void testDeleteStudentSuccess() {
         int studentId = 1;
         when(studentRepo.existsById(studentId)).thenReturn(true);
-        doNothing().when(studentRepo).deleteById(studentId);
+        doNothing().when(studentRepo).deleteById(studentId); //should not perfrom anything
         studentService.deleteStudentById(studentId);
         verify(studentRepo, times(1)).deleteById(studentId);
     }

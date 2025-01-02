@@ -1,0 +1,177 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > StudentClientService</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.spring.services</a>
+</div>
+
+<h1>Coverage Summary for Class: StudentClientService (com.spring.services)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">StudentClientService</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (5/5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (12/12)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">StudentClientService$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (6/6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (13/13)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.spring.services;
+&nbsp;
+&nbsp;import com.spring.dtos.CustomPageResponse;
+&nbsp;import com.spring.dtos.StudentDTO;
+&nbsp;import com.spring.dtos.SubjectDTO;
+&nbsp;import com.spring.exceptions.StudentNotFoundException;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import org.springframework.core.ParameterizedTypeReference;
+&nbsp;import org.springframework.http.*;
+&nbsp;import org.springframework.stereotype.Service;
+&nbsp;import org.springframework.web.client.HttpClientErrorException;
+&nbsp;import org.springframework.web.client.RestTemplate;
+&nbsp;
+&nbsp;import java.util.ArrayList;
+&nbsp;import java.util.List;
+&nbsp;@Service
+<b class="fc">&nbsp;public class StudentClientService {</b>
+&nbsp;    private static final String STUDENT_SERVICE_URL = &quot;http://localhost:8083/students&quot;;
+&nbsp;    @Autowired
+&nbsp;    private RestTemplate restTemplate;
+&nbsp;    // Fetch students by name
+&nbsp;    public List&lt;StudentDTO&gt; getStudentsByName(String name) {
+<b class="fc">&nbsp;        String url = STUDENT_SERVICE_URL + &quot;/name/&quot; + name;</b>
+<b class="fc">&nbsp;        List&lt;StudentDTO&gt; students=restTemplate.getForObject(url, List.class);</b>
+<b class="fc">&nbsp;        return students;</b>
+&nbsp;    }
+&nbsp;    // Fetch students by age
+&nbsp;    public List&lt;StudentDTO&gt; getStudentByAge(int age) {
+<b class="fc">&nbsp;        String url = STUDENT_SERVICE_URL + &quot;/age/&quot; + age;</b>
+<b class="fc">&nbsp;        List&lt;StudentDTO&gt; students = restTemplate.getForObject(url, List.class);</b>
+<b class="fc">&nbsp;        return students;</b>
+&nbsp;    }
+&nbsp;    // Fetch all students with pagination
+&nbsp;    public CustomPageResponse&lt;StudentDTO&gt; getAllStudents(int page, int size) {
+<b class="fc">&nbsp;        String url = STUDENT_SERVICE_URL + &quot;/all?page=&quot; + page + &quot;&amp;size=&quot; + size;</b>
+<b class="fc">&nbsp;        ResponseEntity&lt;CustomPageResponse&lt;StudentDTO&gt;&gt; response = restTemplate.exchange(url, HttpMethod.GET, null,</b>
+<b class="fc">&nbsp;                new ParameterizedTypeReference&lt;CustomPageResponse&lt;StudentDTO&gt;&gt;() {}</b>
+&nbsp;        );
+<b class="fc">&nbsp;        return response.getBody();</b>
+&nbsp;    }
+&nbsp;    // Fetch subjects by name
+&nbsp;    public List&lt;SubjectDTO&gt; findSubjectsByName(String name) {
+<b class="fc">&nbsp;        String url = STUDENT_SERVICE_URL + &quot;/subjects/&quot; + name;</b>
+<b class="fc">&nbsp;        return restTemplate.getForObject(url, List.class);</b>
+&nbsp;    }
+&nbsp;}
+&nbsp;
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-12-31 19:58</div>
+</div>
+</body>
+</html>

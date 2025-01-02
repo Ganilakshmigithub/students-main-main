@@ -3,6 +3,10 @@ public class SubjectDTO {
     private int subId;
     private String name;
     private int marks;
+
+    public SubjectDTO() {
+    }
+
     // Constructor
     public SubjectDTO(int subId, String name, int marks) {
         this.subId = subId;
@@ -28,5 +32,6 @@ public class SubjectDTO {
     public void setMarks(int marks) {
         this.marks = marks;
     }
+
 }
 

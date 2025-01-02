@@ -3,12 +3,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.*;
-
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 @Entity
 public class Students {
+
     @Id
     @GeneratedValue(strategy =GenerationType.IDENTITY)
     private int id;
+    @NotNull(message = "user name must be present")
     private String name;
     private int age;
     private String gender;

@@ -1,4 +1,5 @@
 package com.spring.controllers;
+import com.spring.dtos.ErrorResponse;
 import com.spring.dtos.StudentDTO;
 import com.spring.services.StudentService;
 import jakarta.validation.Valid;
@@ -16,10 +17,11 @@ public class StudentController {
     // Add a new student
     @PostMapping("/save")
     public ResponseEntity<?> addStudent(@RequestBody @Valid StudentDTO student, BindingResult bindingResult) {
-        if (bindingResult.hasErrors())
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse<StudentDTO>("validation failed..please check deatils before you post!!"));
-            studentService.addStudent(student);
-            return ResponseEntity.status(HttpStatus.CREATED).body(student);
+        if(bindingResult.hasErrors()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse("Validation Failed..Please Check Data Before Posting"));
+        }
+        studentService.addStudent(student);
+        return ResponseEntity.status(HttpStatus.CREATED).body(student);
     }
     //update student marks
     @PutMapping("/update/{student_id}/{subject_id}/newmarks")

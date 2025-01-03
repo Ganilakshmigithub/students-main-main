@@ -35,11 +35,18 @@ public class StudentService {
         students.setCourse(studentDTO.getCourse());
         students.setCourseStartYear(studentDTO.getCourseStartYear());
         students.setCourseEndYear(studentDTO.getCourseEndYear());
-        SubjectDTO subject = new SubjectDTO();
-        subject.setSubId(subject.getSubId());
-        subject.setName(subject.getName());
-        subject.setMarks(subject.getMarks());
-        students.setSubjects(students.getSubjects());
+        if (studentDTO.getSubjects() != null) {
+            List<Subject> subjects = studentDTO.getSubjects().stream()
+                    .map(subjectDTO -> {
+                        Subject subject = new Subject();
+                        subject.setSubId(subjectDTO.getSubId());
+                        subject.setName(subjectDTO.getName());
+                        subject.setMarks(subjectDTO.getMarks());
+                        return subject;
+                    })
+                    .collect(Collectors.toList());
+            students.setSubjects(subjects);
+        }
         return students;
     }
     // Add a new student

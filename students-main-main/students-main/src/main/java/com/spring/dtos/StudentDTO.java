@@ -11,7 +11,6 @@ public class StudentDTO {
     @Min(value = 18,message = "age should not be less than 18")
     private int age;
     private String gender;
-    @Max(value = 31-12-1995,message = "age must be after 95 born")
     private String dob;
     private String course;
     private int courseStartYear;

@@ -11,6 +11,7 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import java.util.Arrays;
 import static org.mockito.Mockito.doNothing;
@@ -40,49 +41,42 @@ public class StudentControllerTest {
     }
 //
      //Test for adding a student
+@Test
+public void testAddStudentSuccess() throws Exception {
+    // Prepare subject DTO with subId, name, and marks
+    SubjectDTO subject1 = new SubjectDTO(1, "Maths", 80);
+    SubjectDTO subject2 = new SubjectDTO(2, "English", 90);
+    // Prepare a valid student DTO
+    StudentDTO studentDTO = new StudentDTO(1, "pooja", 24, "female", "7-9-2000", "cse", 2018, 2022, Arrays.asList(subject1, subject2));
+    // Mock the service method to return the studentDTO when addStudent is called
+    when(studentService.addStudent(Mockito.any(StudentDTO.class))).thenReturn(studentDTO);
+    // Perform POST request and check assertions
+    mockMvc.perform(MockMvcRequestBuilders.post("/students/save")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content("{\"id\":1,\"name\":\"pooja\",\"age\":24,\"gender\":\"female\",\"dob\":\"7-9-2000\",\"course\":\"cse\",\"courseStartYear\":2018,\"courseEndYear\":2022,\"subjects\":[{\"subId\":1,\"name\":\"Maths\",\"marks\":80},{\"subId\":2,\"name\":\"English\",\"marks\":90}]}"))
+            .andExpect(status().isCreated()) // Expect 201 Created
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(content().json("{\"id\":1,\"name\":\"pooja\",\"age\":24,\"gender\":\"female\",\"dob\":\"7-9-2000\",\"course\":\"cse\",\"courseStartYear\":2018,\"courseEndYear\":2022,\"subjects\":[{\"subId\":1,\"name\":\"Maths\",\"marks\":80},{\"subId\":2,\"name\":\"English\",\"marks\":90}]}"));
+}
     @Test
-    public void testAddStudent() throws Exception {
-        SubjectDTO s3 = new SubjectDTO(1, "Maths", 80);
-        SubjectDTO s4 = new SubjectDTO(2, "English", 90);
-        StudentDTO s = new StudentDTO(1, "Abhi", 20, "Male", "22-3-2004", "computer science", 2020, 2024, Arrays.asList(s3, s4));
-        when(studentService.addStudent(Mockito.any(StudentDTO.class))).thenReturn(s);
-        mockMvc.perform(post("/students/save")
+    public void testAddStudentValidationFailure() throws Exception {
+        // Prepare a valid student DTO with invalid age (e.g., age < 18)
+        SubjectDTO subject1 = new SubjectDTO(1, "Maths", 80);
+        SubjectDTO subject2 = new SubjectDTO(2, "English", 90);
+        // Invalid student DTO (age = 10 should fail validation)
+        String studentJson = "{\"id\":1,\"name\":\"pooja\",\"age\":10,\"gender\":\"female\",\"dob\":\"7-9-2000\",\"course\":\"cse\",\"courseStartYear\":2018,\"courseEndYear\":2022,\"subjects\":[{\"subId\":1,\"name\":\"Maths\",\"marks\":80},{\"subId\":2,\"name\":\"English\",\"marks\":90}]}";
+        // Perform POST request and check assertions
+        mockMvc.perform(MockMvcRequestBuilders.post("/students/save")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("""
-                            {
-                               "id": 1,
-                              "name":"Abhi",
-                              "age":20,
-                              "gender":"male",
-                              "dob":"22-3-2004",
-                              "course":"computer science",
-                              "courseStartYear":2020,
-                              "courseEndYear":2024,
-                              "subjects":[
-                                {"subId":1,"name":"Maths","marks":80},
-                                {"subId":2,"name":"English","marks":90}
-                              ]
-                            }
-                            """))
-                .andExpect(status().isOk())
-                .andExpect(content().json("""
-                    {
-                      "id":1,
-                      "name":"Abhi",
-                      "age":20,
-                      "gender":"Male",
-                      "dob":"22-3-2004",
-                      "course":"computer science",
-                      "courseStartYear":2020,
-                      "courseEndYear":2024,
-                      "subjects":[
-                        {"subId":1,"name":"Maths","marks":80},
-                        {"subId":2,"name":"English","marks":90}
-                      ]
-                    }
-                    """));
+                        .content(studentJson))
+                .andExpect(status().isBadRequest()) // Expect 400 for validation failure
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().json("{\"message\":\"Validation Failed..Please Check Data Before Posting\"}"));
     }
-     //Test for updating marks
+
+
+
+    //Test for updating marks
     @Test
     public void testUpdateMarksControl() throws Exception {
         int studentId = 1;

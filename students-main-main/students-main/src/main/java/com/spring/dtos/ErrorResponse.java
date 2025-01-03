@@ -1,6 +1,6 @@
-package com.spring.controllers;
+package com.spring.dtos;
 
-public class ErrorResponse<StudentDTO> {
+public class ErrorResponse{
     String message;
     public ErrorResponse(String message) {
         this.message = message;

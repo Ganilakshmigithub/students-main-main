@@ -1,4 +1,5 @@
 package com.spring.controllers;
+import com.spring.CustomAnnotations.Admin;
 import com.spring.dtos.ErrorResponse;
 import com.spring.dtos.StudentDTO;
 import com.spring.services.StudentService;
@@ -15,6 +16,7 @@ public class StudentController {
     private StudentService studentService;
 
     // Add a new student
+    @Admin
     @PostMapping("/save")
     public ResponseEntity<?> addStudent(@RequestBody @Valid StudentDTO student, BindingResult bindingResult) {
         if(bindingResult.hasErrors()) {
@@ -24,12 +26,14 @@ public class StudentController {
         return ResponseEntity.status(HttpStatus.CREATED).body(student);
     }
     //update student marks
+    @Admin
     @PutMapping("/update/{student_id}/{subject_id}/newmarks")
     public String UpdateMarks(@PathVariable int student_id, @PathVariable int subject_id, @RequestParam int newmarks) {
         studentService.updateMarks(student_id, subject_id, newmarks);
         return "marks updated successfully..!!";
     }
 
+    @Admin
     //deletes student by id
     @DeleteMapping("/del/{id}")
     public void deleteStudentById(@PathVariable int id) {

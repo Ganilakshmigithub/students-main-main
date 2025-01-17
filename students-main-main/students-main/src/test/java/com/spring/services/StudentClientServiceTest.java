@@ -4,9 +4,11 @@ import com.spring.dtos.StudentDTO;
 import com.spring.dtos.SubjectDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -15,15 +17,12 @@ import java.util.Arrays;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
+@ExtendWith(MockitoExtension.class)
 public class StudentClientServiceTest {
     @Mock
     private RestTemplate restTemplate;
     @InjectMocks
     private StudentClientService studentClientService;
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
-    }
     // A Helper method to create StudentDTO with SubjectDTOs
     private StudentDTO createStudent(int id, String name, int age, String gender, String dob, String course,
                                      int courseStartYear, int courseEndYear, SubjectDTO... subjects) {

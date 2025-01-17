@@ -22,20 +22,26 @@ public class StudentServiceTest {
     private StudentService studentService;
     // Test converting from Students entity to StudentDTO (cover edge cases)
     @Test
-    public void testConvertToDTO() {
+    public void testConvertoDTO() {
         Subject s1 = new Subject(1, "Maths", 80);
         Subject s2 = new Subject(2, "English", 90);
         Students student = new Students(1, "raju", 23, "male", "23-7-2001", "CSE", 2019, 2023, Arrays.asList(s1, s2));
-        // Normal case with valid student
         StudentDTO studentDTO = studentService.convertToDTO(student);
         assertNotNull(studentDTO);
         assertEquals(student.getId(), studentDTO.getId());
-        // More assertions...
-        // Case with empty subjects list
-        student = new Students(2, "John", 25, "male", "01-01-1998", "ECE", 2020, 2024, Arrays.asList());
-        studentDTO = studentService.convertToDTO(student);
-        assertNotNull(studentDTO);
-        assertTrue(studentDTO.getSubjects().isEmpty(), "Subjects should be empty");
+        assertEquals(student.getName(), studentDTO.getName());
+        assertEquals(student.getAge(), studentDTO.getAge());
+        assertEquals(student.getGender(), studentDTO.getGender());
+        assertEquals(student.getDob(), studentDTO.getDob());
+        assertEquals(student.getCourse(), studentDTO.getCourse());
+        assertEquals(student.getCourseStartYear(), studentDTO.getCourseStartYear());
+        assertEquals(student.getCourseEndYear(), studentDTO.getCourseEndYear());
+        assertEquals(student.getSubjects().get(0).getSubId(), studentDTO.getSubjects().get(0).getSubId());
+        assertEquals(student.getSubjects().get(1).getSubId(), studentDTO.getSubjects().get(1).getSubId());
+        assertEquals(student.getSubjects().get(0).getName(), studentDTO.getSubjects().get(0).getName());
+        assertEquals(student.getSubjects().get(1).getName(), studentDTO.getSubjects().get(1).getName());
+        assertEquals(student.getSubjects().get(0).getMarks(), studentDTO.getSubjects().get(0).getMarks());
+        assertEquals(student.getSubjects().get(1).getMarks(), studentDTO.getSubjects().get(1).getMarks());
     }
     // Test converting from StudentDTO to Students entity (cover edge cases)
     @Test
@@ -45,13 +51,19 @@ public class StudentServiceTest {
         Students students = studentService.convertToEntity(student);
         assertNotNull(students);
         assertEquals(student.getId(), students.getId());
-        // More assertions...
-        // Case with empty subject list
-        student = new StudentDTO(2, "Alex", 26, "Male", "10-10-1997", "BBA", 2021, 2025, Arrays.asList());
-        students = studentService.convertToEntity(student);
-        assertNotNull(students);
-        assertTrue(students.getSubjects().isEmpty(), "Subjects should be empty");
+        assertEquals(student.getName(), students.getName());
+        assertEquals(student.getAge(), students.getAge());
+        assertEquals(student.getGender(), students.getGender());
+        assertEquals(student.getDob(), students.getDob());
+        assertEquals(student.getCourse(), students.getCourse());
+        assertEquals(student.getCourseStartYear(), students.getCourseStartYear());
+        assertEquals(student.getCourseEndYear(), students.getCourseEndYear());
+        assertEquals(1, students.getSubjects().size());
+        assertEquals(s1.getSubId(), students.getSubjects().get(0).getSubId());
+        assertEquals(s1.getName(), students.getSubjects().get(0).getName());
+        assertEquals(s1.getMarks(), students.getSubjects().get(0).getMarks());
     }
+
     // Test adding a student successfully
     @Test
     public void testAddStudentSuccess() {

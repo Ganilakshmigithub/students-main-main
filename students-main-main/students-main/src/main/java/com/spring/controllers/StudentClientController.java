@@ -2,6 +2,7 @@ package com.spring.controllers;
 
 
 import ch.qos.logback.core.net.SyslogOutputStream;
+import com.spring.CustomAnnotations.User;
 import com.spring.dtos.ApiResponse;
 import com.spring.dtos.CustomPageResponse;
 import com.spring.dtos.StudentDTO;
@@ -18,6 +19,8 @@ import java.util.List;
 public class StudentClientController {
     @Autowired
     private StudentClientService studentClientService;
+
+    @User
     @GetMapping("/name/{name}")
     public ResponseEntity<?> getStudentByName(@PathVariable String name) {
         if (studentClientService.getStudentsByName(name).isEmpty()) {
@@ -26,6 +29,7 @@ public class StudentClientController {
         return new ResponseEntity<>(studentClientService.getStudentsByName(name), HttpStatus.OK);
     }
 
+    @User
     @GetMapping("/age/{age}")
     public ResponseEntity<?> getStudentByAge(@PathVariable int age) {
         if(studentClientService.getStudentByAge(age).isEmpty()) {
@@ -33,6 +37,8 @@ public class StudentClientController {
         }
         return new ResponseEntity<>(studentClientService.getStudentByAge(age), HttpStatus.OK);
     }
+
+    @User
     @GetMapping("/all")
     public ResponseEntity<CustomPageResponse<StudentDTO>> getAllStudents(@RequestParam int page, @RequestParam int size) {
         CustomPageResponse<StudentDTO> studentPage = studentClientService.getAllStudents(page, size);
@@ -46,6 +52,7 @@ public class StudentClientController {
     }
 
 
+    @User
     @GetMapping("/subjects/{name}")
     public ResponseEntity<?> getsubjectByName(@PathVariable String name) {
         if(studentClientService.findSubjectsByName(name).isEmpty()) {
